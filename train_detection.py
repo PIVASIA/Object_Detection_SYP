@@ -16,9 +16,9 @@ import mlflow.pytorch
 from det_models.model import POIDetection
 # from datasets.datamodule import POIDataModule
 
-from datasets_signboard_detection.datamodule import POIDataModule
+from datasets_detection.datamodule import POIDataModule
 MLFLOW_TRACKING_URI = "databricks"
-MLFLOW_EXPERIMENT = "/Users/hunglv@piv.asia/Mattress_Detection"
+MLFLOW_EXPERIMENT = "/Users/hunglv@piv.asia/Sticker_Detection"
 
 
 def _parse_args():
@@ -43,7 +43,7 @@ def _parse_args():
     parser.add_argument('--test-batch-size', type=int, default=8,
                         metavar='N', help='input batch size for \
                                 testing (default: auto)')
-    parser.add_argument('--backbone', type=str, default="maskrcnn_resnet50_fpn",
+    parser.add_argument('--backbone', type=str, default="fasterrcnn_mobilenet_v3_large_320_fpn",
                         help='backbone for model')
     parser.add_argument('--tune-fc-only', action='store_true',
                         help='tuning last fc layer only')
@@ -98,7 +98,7 @@ def handle_train(args):
     n_classes = 3
 
     coco = get_coco_api_from_dataset(dm.val_dataloader().dataset)
-    iou_types = ["bbox","segm"]
+    iou_types = ["bbox"]
     # iou_types.append("segm")
     coco_evaluator = CocoEvaluator(coco, iou_types)
     

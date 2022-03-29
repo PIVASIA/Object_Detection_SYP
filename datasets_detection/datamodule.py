@@ -7,8 +7,8 @@ from torchvision import transforms
 
 from sklearn.model_selection import train_test_split
 
-from datasets_signboard_detection.dataset import PoIDataset
-import datasets_signboard_detection.utils as utils
+from datasets_detection.dataset import PoIDataset
+import datasets_detection.utils as utils
 
 import time
 
@@ -51,7 +51,6 @@ class POIDataModule(pl.LightningDataModule):
     
     def setup(self, stage="fit"):
         transform = [transforms.ToTensor()]
-        # transform = [transforms.ToTensor()]
         train_transform = transforms.Compose(transform)
         test_transform = transforms.Compose(transform)
         
