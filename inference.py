@@ -11,14 +11,12 @@ import mlflow
 import mlflow.pytorch
 
 from det_models.model import POIDetection
-# from datasets.datamodule import POIDataModule
-from datasets_signboard_detection.datamodule import POIDataModule
+from datasets_detection.datamodule import POIDataModule
 
 def _parse_args():
     parser = argparse.ArgumentParser(description="POI classification based on image")
     # model parameters
-    # parser.add_argument('--train-path', type=str, default=None,
-    #                     help='Path to training data')
+
     parser.add_argument('--test-path', type=str, default=None,
                         help='Path to testing data')
     parser.add_argument('--data-path', type=str, default=None,
@@ -51,8 +49,7 @@ def handle_inference(args):
 
     model = load_model(args.checkpoint_path)
 
-    # from det_models.inference import POIDetectionTask
-    from det_models.inference_signboard_detection import POIDetectionTask
+    from det_models.inference_detection import POIDetectionTask
     task = POIDetectionTask(model,
                             output_path = args.output_path,
                             test_path=args.test_path,

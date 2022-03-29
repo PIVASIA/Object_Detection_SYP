@@ -14,7 +14,7 @@ import csv
 from PIL import Image,ImageDraw
 from det_models.check_pass_box import check_box
 # from datasets.dataset import Labelizer
-from datasets_signboard_detection.dataset import Labelizer
+from datasets_detection.dataset import Labelizer
 from matplotlib import cm
 import random
 

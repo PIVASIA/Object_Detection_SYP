@@ -46,7 +46,7 @@ class POIDetection(pl.LightningModule):
     def setup_evaluator(self, eval_dataset):
         self.eval_dataset = eval_dataset
         coco = get_coco_api_from_dataset(self.eval_dataset)
-        iou_types = ["bbox","segm"]
+        iou_types = ["bbox"]
         coco_evaluator = CocoEvaluator(coco, iou_types)
         self.coco_evaluator = coco_evaluator
         
@@ -107,13 +107,13 @@ class POIDetection(pl.LightningModule):
         # accumulate predictions from all images
         self.coco_evaluator.accumulate()
         self.coco_evaluator.summarize()
-        stats_segm = self.coco_evaluator.stats_segm
+        # stats_segm = self.coco_evaluator.stats_segm
         stats_bbox = self.coco_evaluator.stats_bbox
         # with mlflow.start_run():
         self.log("val_mAP_bbox", stats_bbox[0])
-        self.log("val_mAP_segm", stats_segm[0])
+        # self.log("val_mAP_segm", stats_segm[0])
         coco = get_coco_api_from_dataset(self.eval_dataset)
-        iou_types = ["bbox","segm"]
+        iou_types = ["bbox"]
         coco_evaluator = CocoEvaluator(coco, iou_types)
         self.coco_evaluator = coco_evaluator
         # metrics_dict = self.coco_evaluator.summarize()
