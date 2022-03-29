@@ -12,10 +12,7 @@ import cv2
 import os
 import csv
 from PIL import Image,ImageDraw
-from det_models.check_pass_box import check_box
-# from datasets.dataset import Labelizer
 from datasets_detection.dataset import Labelizer
-from matplotlib import cm
 import random
 
 def _read_csv(filepath):
@@ -75,24 +72,24 @@ class POIDetectionTask(pl.LightningModule):
             shape = target['boxes']
             score = target['scores']
             labels = target['labels']
-            masks = target['masks']
+            # masks = target['masks']
             shape = shape.numpy()
-            masks = masks.numpy()
+            # masks = masks.numpy()
             score = score.numpy()
             labels = labels.numpy()
             select_shape = []
-            select_masks = []
+            # select_masks = []
             select_labels = []
             for i in range(0,len(score)):
-                if (score[i]>0.9):
+                if (score[i]>0.7):
                     select_shape.append(shape[i])
-                    select_masks.append(masks[i])
+                    # select_masks.append(masks[i])
                     select_labels.append(labels[i])
             select_shape = [select_shape]
-            select_masks = [select_masks]
+            # select_masks = [select_masks]
             select_labels = [select_labels]
             self.pred_targets.extend(select_shape)
-            self.pred_masks.extend(select_masks)
+            # self.pred_masks.extend(select_masks)
             self.pred_labels.extend(select_labels)
 
         #
@@ -114,7 +111,7 @@ class POIDetectionTask(pl.LightningModule):
             img_path = os.path.join(self.data_path,list_img[i])
             image = Image.open(img_path).convert('RGBA')
             pred_boxes = self.pred_targets[i]
-            pred_masks = self.pred_masks[i]
+            # pred_masks = self.pred_masks[i]
             pred_labels = self.pred_labels[i]
             
 
@@ -123,43 +120,13 @@ class POIDetectionTask(pl.LightningModule):
             final = Image.new("RGBA", image.size)
             final.paste(image, (0,0), image)
             draw = ImageDraw.Draw(final)
-            # num_true_boxes += len(true_boxes)
-            # num_pred_boxes += len(pred_boxes)
-            # for box in true_boxes:
-            #     draw.rectangle(((box[0], box[1]), (box[2], box[3])), outline = "green")
-            #     for pred_box in pred_boxes:
-            #         if check_box(box,pred_box):
-            #             num_pred_true_boxes +=1
+            
             width, height = image.size
             binary_mask = np.zeros((height,width),dtype="uint8")
             for j in range(0,len(pred_boxes)):
                 label = pred_labels[j]
                 label = self.labelizer.inverse_transform(label)
                 box = pred_boxes[j]
-                # mask = pred_masks[j]
-                # print(type(mask[0]))
-                # binary_mask[:,:] = binary_mask[:,:] + mask[0]
-                # #create new layer mask
-                
-                # colImage = np.zeros((height,width,3), dtype="uint8")
-                # colImage[:,:,0] = mask[0]*random.randrange(0,255,3)
-                # colImage[:,:,1] = mask[0]*random.randrange(0,255,3)
-                # colImage[:,:,2] = mask[0]*random.randrange(0,255,3)
-                # img = Image.fromarray(np.uint8(colImage))
-                # img = img.convert("RGBA")
-                
-                # new_img = []
-                # datas = img.getdata()
-                # for item in datas:
-                #     if (item[0] < 50) and (item[1] < 50) and (item[2] < 50):
-                #         new_img.append((255, 255, 255, 0))
-                #     else:
-                #         new_img.append(item)
-                # img.putdata(new_img)
-                # img = img.convert("RGBA")
-
-                # final.paste(img, (0,0), img)
-
                 #draw box of signboard
                 draw.rectangle(((box[0], box[1]), (box[2], box[3])),width=10, outline = self.color_convert.transform(label))
 

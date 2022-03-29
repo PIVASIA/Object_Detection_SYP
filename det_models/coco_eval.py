@@ -13,7 +13,7 @@ import pycocotools.mask as mask_util
 
 from collections import defaultdict
 
-import datasets.utils as utils
+import datasets_detection.utils as utils
 
 
 class CocoEvaluator(object):

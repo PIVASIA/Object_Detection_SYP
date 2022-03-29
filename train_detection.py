@@ -22,12 +22,10 @@ MLFLOW_EXPERIMENT = "/Users/hunglv@piv.asia/Sticker_Detection"
 
 
 def _parse_args():
-    parser = argparse.ArgumentParser(description="POI classification based on image")
+    parser = argparse.ArgumentParser(description="Objects Detection on image")
     # model parameters
     parser.add_argument('--train-path', type=str, default=None,
                         help='Path to training data')
-    parser.add_argument('--test-path', type=str, default=None,
-                        help='Path to testing data')
     parser.add_argument('--data-path', type=str, default=None,
                         help='Path to image folder')
     parser.add_argument('--label-path', type=str, default=None,
@@ -43,7 +41,7 @@ def _parse_args():
     parser.add_argument('--test-batch-size', type=int, default=8,
                         metavar='N', help='input batch size for \
                                 testing (default: auto)')
-    parser.add_argument('--backbone', type=str, default="fasterrcnn_mobilenet_v3_large_320_fpn",
+    parser.add_argument('--backbone', type=str, default="fasterrcnn_mobilenet_v3_large_fpn",
                         help='backbone for model')
     parser.add_argument('--tune-fc-only', action='store_true',
                         help='tuning last fc layer only')
@@ -127,10 +125,9 @@ def handle_train(args):
     # if val_check_interval is integer, val frequency is in batch step
     training_params = {
         "callbacks": callbacks,
-        "gpus": 2,
+        "gpus": args.gpu_ids,
         "val_check_interval": 1.0,
-        "max_epochs": args.epochs,
-        "strategy": "dp"
+        "max_epochs": args.epochs
     }
     if args.resume is not None:
         training_params["resume_from_checkpoint"] = args.resume
@@ -141,8 +138,6 @@ def handle_train(args):
 def main():
     args = _parse_args()
     handle_train(args)
-    # handle_predict(args)
-
 
 if __name__ == "__main__":
     main()

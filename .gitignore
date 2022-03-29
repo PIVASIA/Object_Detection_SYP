@@ -1,2 +1,5 @@
 csv_files/*
 logs_model/*
+lightning_logs
+logs_model
+output_inference
